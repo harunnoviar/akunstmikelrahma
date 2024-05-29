@@ -130,6 +130,22 @@
                            <div class="invalid-feedback"> <?= $validation->getError('password'); ?></div>
                         </div>
                      </div>
+                     <div class="form-group row">
+                        <label for="recoveryemail" class="col-sm-4 col-form-label">Email Pemulihan</label>
+                        <div class="col-sm-8">
+                           <div class="input-group">
+                              <input type="email" class="form-control " value="" name="recoveryemail" id="recoveryemail" autocomplete="off">
+                           </div>
+                        </div>
+                     </div>
+                     <div class="row">
+                        <div class="col-sm">
+                           <div class="form-check mb-2 text-right">
+                              <label for=""> <input type="checkbox" class="form-check-input" id="active" name="active"> Aktif</label>
+                           </div>
+                        </div>
+                     </div>
+
                      <div class="text-right">
                         <button type="submit" class="btn btn-primary"> <i class="fas fa-plus"></i>Tambah</button>
                      </div>

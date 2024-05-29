@@ -36,7 +36,7 @@ class User extends BaseController
         $data = [
             'title' => 'Manajemen Pengguna',
             'content' => 'admin/v_users',
-            'a_menu' => 'userm',
+            'a_menu' => 'users',
         ];
 
         return view('layout/v_wrapper', $data);
@@ -132,6 +132,8 @@ class User extends BaseController
         $nidn = $this->request->getPost('nidn');
         $groups = $this->request->getPost('group');
         $ou = $this->request->getPost('ou');
+        $recoveryemail = $this->request->getPost('recoveryemail');
+        $active = $this->request->getPost('active') === 'on' ? 1 : 0;
 
         $rules = [
             'firstname' => [
@@ -219,6 +221,8 @@ class User extends BaseController
             'active' => 0, // default active = 0 (tidak aktif)
             'password' => password_hash($pass, PASSWORD_DEFAULT),
             'pass_ldap' => ldapPass($pass),
+            'recoveryemail' => $recoveryemail,
+            'active' => $active,
             'created_at' => date('Y-m-d H:i:s'),
             'created_by' => session()->get('email'),
         ];
