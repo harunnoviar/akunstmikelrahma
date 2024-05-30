@@ -1,63 +1,79 @@
-# CodeIgniter 4 Application Starter
+# Aplikasi Manajemen Pengguna SSO
 
-## What is CodeIgniter?
+## Aplikasi apakah ini?
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](http://codeigniter.com).
+Aplikasi ini merupakan sebuah sistem yang digunakan untuk melakukan manajemen pengguna pada server LDAP. Aplikasi ini dibangun menggunakan bahasa pemrograman PHP dan framework [Codeigniter 4](http://codeigniter.com). Aplikasi ini tidak dapat berdiri sendiri karena membutuhkan sebuah server LDAP yang nanti terhubung untuk dilakukan manajemen.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## Kebutuhan Server Hosting
 
-More information about the plans for version 4 can be found in [the announcement](http://forum.codeigniter.com/thread-62615.html) on the forums.
+- NGINX/Apache
+- PHP 7.2
+- Composer
+- Postgresql 12
+- Ldap Server
+- git
 
-The user guide corresponding to this version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+## Instalasi Aplikasi
 
-## Installation & updates
+Lakukan clone aplikasi dari repository ke server hosting yang sudah memenuhi kriteria kebutuhan sistem.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+```bash
+git clone https://github.com/harunnoviar/akunstmikelrahma.git public_html
+```
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+Masuk ke direktori `public_html` dan install composer
 
-## Setup
+```bash
+cd public_html
+composer install
+```
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+Buat file `.env` yang berisikan konfigurasi dari aplikasi dan sesuaikan dengan servernya misalkan domain atau koneksi database
 
-## Important Change with index.php
+```bash
+# CI_ENVIRONMENT = development
+app.baseURL = 'https://akun.stmikelrahma.ac.id/' # Silakan ganti domain
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+### Koneksi database, ganti dan sesuaikan
+database.default.DSN = 'pgsql:host=dbhost;port=5432;dbname=dbname;user=dbuser;password=dbpassword'
+database.default.hostname = dbhost
+database.default.database = dbname
+database.default.username = dbuser
+database.default.password = dbpassword
+database.default.DBDriver = Postgre
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+#--------------------
+## LDAP SERVER, ganti dan sesuaikan dengan koneksi LDAP
+#--------------------
+ldap.stmikelrahma.host = '192.168.xxx.xxx'
+ldap.stmikelrahma.port = '389'
+ldap.stmikelrahma.proto = 'ldap://'
+ldap.stmikelrahma.user = "cn=admin,dc=stmikelrahma,dc=ac,dc=id"
+ldap.stmikelrahma.pass = 'gantiPasswordLDAP'
+ldap.stmikelrahma.usetls = TRUE
+ldap.stmikelrahma.searchbase = 'dc=stmikelrahma,dc=ac,dc=id'
 
-**Please** read the user guide for a better explanation of how CI4 works!
+#--------------------
+# Email, sesuaikan email dengan SMTP yang akan digunakan
+#--------------------
+email.fromEmail = 'no-reply.akun@stmikelrahma.ac.id'
+email.fromName = 'Admin Password Email STMIK EL RAHMA'
+email.protocol = 'smtp'
+email.SMTPHost = 'smtp-relay.gmail.com'
+email.SMTPUser = 'exampleemail@stmikelrahma.ac.id'
+email.SMTPPass = 'gantiPassEmailApp'
+email.SMTPPort = '587'
 
-## Repository Management
+##Myconfig
+myconfig.google.redirect_url = 'https://akun.stmikelrahma.ac.id/register/gauth'
+myconfig.google.client_id = 'gantiDenganGoogleClientId'
+myconfig.google.client_secret = 'GantiDenganGoogleClientSecret'
+myconfig.googleRecaptchaSiteKey= 'gantiGoogleRecaptchaSiteKey'
+myconfig.googleRecaptchaSecretKey= 'gantiGoogleRecaptchaSecretKey'
+```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Lakukan Import database dari file `default_database.sql` yang ada di dalama public_html.
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 7.4 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php)
-- xml (enabled by default - don't turn it off)
+```bash
+psql -Udbuser -hdbhost dbname < default_database.sql
+```
