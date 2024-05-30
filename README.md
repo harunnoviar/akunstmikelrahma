@@ -78,4 +78,4 @@ Lakukan Import database dari file `default_database.sql` yang ada di dalama publ
 psql -Udbuser -hdbhost dbname < default_database.sql
 ```
 
-Lakukan testing masuk ke aplikasi halaman admin dengan mengakses https://domainanda.com/admin`default username: admin`dan`password: elrahma123`
+Lakukan testing masuk ke aplikasi halaman admin dengan mengakses https://domainanda.com/admin `default username: admin` dan `password: elrahma123`
