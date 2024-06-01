@@ -72,7 +72,7 @@ myconfig.googleRecaptchaSiteKey= 'gantiGoogleRecaptchaSiteKey'
 myconfig.googleRecaptchaSecretKey= 'gantiGoogleRecaptchaSecretKey'
 ```
 
-Lakukan Import database dari file `default_database.sql` yang ada di dalama public_html.
+Lakukan Import database dari file `default_database.sql` yang ada di dalam public_html.
 
 ```bash
 psql -Udbuser -hdbhost dbname < default_database.sql

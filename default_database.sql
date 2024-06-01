@@ -620,6 +620,7 @@ COPY public.cat_with_dom (id, c_id, d_id) FROM stdin;
 4	1	3
 \.
 
+
 --
 -- Data for Name: group; Type: TABLE DATA; Schema: public; Owner: -
 --
@@ -628,6 +629,7 @@ COPY public."group" (g_id, g_name, g_desc, protected, opsi, created_at, updated_
 1	dosen	Group dosen	t	t	2024-01-30 08:22:03	\N	ou=groups,dc= stmikelrahma,dc=ac,dc=id
 2	tendik	Group Tendik	t	t	2024-01-30 08:22:03	\N	ou=groups,dc= stmikelrahma,dc=ac,dc=id
 3	mhs	Group Mahasiswa	t	t	2024-01-30 08:22:03	\N	ou=groups,dc= stmikelrahma,dc=ac,dc=id
+4	groupcoba	groupku coba aja	f	f	2024-06-01 11:12:05	\N	ou=groups,dc=stmikelrahma,dc=ac,dc=id
 \.
 
 
@@ -638,8 +640,8 @@ COPY public."group" (g_id, g_name, g_desc, protected, opsi, created_at, updated_
 COPY public.group_with_cat (g_id, c_id) FROM stdin;
 2	1
 3	2
-3	1
 1	1
+4	1
 \.
 
 
@@ -709,6 +711,7 @@ COPY public.user_category (id, name, description, created_at, updated_at, base_d
 2	mhs	OU Mahasiswa	2023-03-08 19:15:58	\N	dc=stmikelrahma,dc=ac,dc=id	t
 1	staff	OU Staff	2023-03-08 19:15:29	2024-02-06 18:08:01	dc=stmikelrahma,dc=ac,dc=id	t
 \.
+
 
 --
 -- Data for Name: user_domain; Type: TABLE DATA; Schema: public; Owner: -

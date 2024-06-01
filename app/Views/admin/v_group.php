@@ -70,6 +70,16 @@
                      <input type="text" name="g_desc" class="form-control" id="g_desc" required>
                   </div>
                </div>
+               <div class="form-group row">
+                  <label for="ou" class="col-sm-4 col-form-label">Katergori [OU]</label>
+                  <div class="col-sm-8">
+                     <select class="form-control" name="ou" id="ou">
+                        <?php foreach ($ou_list as $o) { ?>
+                           <option value="<?= $o['id'] ?>"><?= $o['id'] ?>. <?= $o['name'] ?></option>
+                        <?php } ?>
+                     </select>
+                  </div>
+               </div>
             </div>
             <div class="modal-footer justify-content-between">
                <button type="button" id="cancel_button" class="btn btn-default" data-dismiss="modal">Tutup</button>
@@ -97,6 +107,7 @@
                <div id="nama_group"></div>
                <div id="nama_group_dn"></div>
                <div id="deskripsi"></div>
+               <div id="ou"></div>
             </div>
             <div class="modal-footer justify-content-between">
                <input type="hidden" name="action" id="action" value="" />
@@ -160,11 +171,20 @@
             let i = '';
             let z = '';
             let selection;
+            // console.log(data);
+
+            // siapkan data ou yang sudah dipilih
+            let ou_html = "";
+            data.ou.forEach((i) => {
+               checked = i.name === data.ou_name ? "selected" : "";
+               ou_html += `<option id="ou_${i.id}" value="${i.id}" ${checked} ?> ${i.id}. ${i.name} </option>`;
+            })
 
             $('#editGroupModal #nama_group').html('<div class="form-group row "> <label for="g_name" class="col-sm-4 col-form-label">Nama Group</label> <div class="col-sm-8"> <input type="text" name="g_name" class="form-control" id="g_name" value="' + data.g_name + '" > <div id="g_name_err" class="text-danger error"></div></div></div>');
             $('#editGroupModal #nama_group_dn').html('<div class="form-group row"> <label for="base_group_dn" class="col-sm-4 col-form-label">Nama Group</label> <div class="col-sm-8"> <input type="text" name="base_group_dn" class="form-control" id="base_group_dn" value="' + data.base_group_dn + '" readonly="readonly" > <div id="base_group_dn_err" class="text-danger"></div></div></div>');
             $('#editGroupModal #deskripsi').html('<div class="form-group row "> <label for="g_desc" class="col-sm-4 col-form-label">Keterangan</label> <div class="col-sm-8"> <input type="text" name="g_desc" class="form-control " id="g_desc" value="' + data.g_desc + '" > <div id="g_desc_err" class="text-danger error"></div> </div></div>');
-            $('#editGroupModal #domain').html('<div class="form-group row"><label for="domain" class="col-sm-4 col-form-label">Domain</label> <div class="col-sm-8"><select class="custom-select" id="domain" name="domain"> ' + i + '</select></div></div>');
+            $('#editGroupModal #ou').html('<div class="form-group row "> <label for="ou" class="col-sm-4 col-form-label">OU</label> <div class="col-sm-8"> <select class="form-control " id="ou" name="ou" disabled>' + ou_html + ' </select> </div> </div></div>');
+            // $('#editGroupModal #ou').html('<div class="form-group row "> <label for="ou" class="col-sm-4 col-form-label">OU</label> <div class="col-sm-8"> <label class="form-control " id="ou" name="ou">' + data.ou_name + ' </label> </div> </div></div>');
             $('#editGroupModal #action').val('edit');
             $('#editGroupModal #hidden_id').val(data.g_id);
             $('#editGroupModal #submit_button').text('Simpan');

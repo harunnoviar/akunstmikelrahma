@@ -3,6 +3,7 @@
 namespace App\Modules\Admin\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\CategoryModel;
 use App\Models\GlobalModel;
 use App\Models\GroupModel;
 use App\Models\LdapModel;
@@ -10,7 +11,7 @@ use App\Models\UserModel;
 
 class Group extends BaseController
 {
-    private  $globalModel, $ldapModel, $groupModel, $userModel;
+    private  $globalModel, $ldapModel, $groupModel, $userModel, $categoryModel;
     protected $dummy_user = 'uid=dummyuser,dc=stmikelrahma,dc=ac,dc=id';  //user dummy ke ldap untuk buat group
     // protected $protectGroup = [];
     protected $protectGroup = ['tendik', 'dosen', 'mahasiswa'];
@@ -24,14 +25,17 @@ class Group extends BaseController
         $this->groupModel = new GroupModel();
         $this->ldapModel = new LdapModel();
         $this->userModel = new UserModel();
+        $this->categoryModel = new CategoryModel();
     }
 
     public function index()
     {
+        $ou_list = $this->categoryModel->getCategoryAll()->orderBy('id')->get()->getResultArray();
         $data = [
             'title' => 'Group',
             'content' => 'admin/v_group',
             'a_menu' => 'grp',
+            'ou_list' => $ou_list,
             'validation' => \Config\Services::validation(),
         ];
 
@@ -146,14 +150,14 @@ class Group extends BaseController
             'base_group_dn' => $this->request->getPost('base_group_dn'),
             'g_desc' => $this->request->getPost('g_desc'),
         ];
+        $ou_id = $this->request->getPost('ou');
 
         $dn = 'cn=' . $data['g_name'] . ',' . $data['base_group_dn'];
         $members[] = $this->dummy_user;
 
         $group_in_db = $this->groupModel->getGrpByName($data['g_name']);
         $group_in_ldap = $this->ldapModel->getGroup($data['g_name'], $data['base_group_dn']);
-        // var_dump($group_in_ldap['count'] === 0);
-        // die();
+
         if ($group_in_db) { //jika froup sudah ada di database, kirim error
             $message = '<div class="alert alert-default-danger alert-dismissible"> <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Database error - group : ' . $data["g_name"] . ' sudah ada </div>';
             echo json_encode(['message' => $message]);
@@ -180,6 +184,9 @@ class Group extends BaseController
             echo json_encode(['message' => $message]);
             exit;
         }
+        $g_id = $this->groupModel->getGrpByName($data['g_name'])['g_id'];
+        $data_group_to_cat = ['g_id' => $g_id, 'c_id' => $ou_id];
+        $query_db_insert_group_to_cat = $this->groupModel->insertGroupToCategory($data_group_to_cat);
 
         // jika sukses semua
         // catat log
@@ -191,9 +198,11 @@ class Group extends BaseController
     public function editfetch()
     {
         $id = dekrip($this->request->getPost('id'));
-        $group = $this->groupModel->getGrpById($id);
+        // $group = $this->groupModel->getGrpById($id);
+        $ou = $this->categoryModel->getCategoryAll()->orderBy('id')->get()->getResultArray();
+        $group = (array)($this->groupModel->getGrpWithOuById($id));
         $group_id_enc = enkrip($group['g_id']);
-        $group = array_merge($group, ['g_id' => $group_id_enc]);
+        $group = array_merge($group, ['g_id' => $group_id_enc, 'ou' => $ou]);
         echo json_encode($group);
     }
 

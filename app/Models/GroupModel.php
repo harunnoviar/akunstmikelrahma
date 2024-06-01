@@ -155,6 +155,12 @@ class GroupModel extends Model
         return $builder->insert($data);
     }
 
+    public function insertGroupToCategory($data)
+    {
+        $builder = $this->db->table('group_with_cat');
+        return $builder->insert($data);
+    }
+
     public function updateGroup($id, $data)
     {
         $builder = $this->db->table('group');
